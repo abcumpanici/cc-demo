@@ -1,0 +1,13 @@
+spring:
+  kafka:
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+file:
+  input:
+    directory: ./target/test-input
+  processed:
+    directory: ./target/test-processed
+  failed:
+    directory: ./target/test-failed

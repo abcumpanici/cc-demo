@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="5">
+    <title>File Processor Dashboard</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 20px; background: #f5f5f5; }
+        h1, h2 { color: #333; }
+        table { border-collapse: collapse; width: 100%; margin-bottom: 30px; background: white; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background: #4a90d9; color: white; }
+        tr:nth-child(even) { background: #f9f9f9; }
+        .COMPLETED, .SUCCESS { color: #28a745; font-weight: bold; }
+        .FAILED, .ERROR { color: #dc3545; font-weight: bold; }
+        .STARTED, .PROCESSING { color: #ffc107; font-weight: bold; }
+        .container { max-width: 1200px; margin: 0 auto; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>File Processor Dashboard</h1>
+
+        <h2>Job Runs</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Job ID</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Status</th>
+                    <th>Duration</th>
+                    <th>Records</th>
+                    <th>TPS</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="job : ${jobExecutions}">
+                    <td th:text="${job.id}"></td>
+                    <td th:text="${job.startTime}"></td>
+                    <td th:text="${job.endTime}"></td>
+                    <td th:class="${job.status}" th:text="${job.status}"></td>
+                    <td th:text="${job.duration}"></td>
+                    <td th:text="${job.recordCount}"></td>
+                    <td th:text="${job.tps}"></td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(jobExecutions)}">
+                    <td colspan="7" style="text-align: center; color: #666;">No job executions yet</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>Processed Files</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Filename</th>
+                    <th>Processed At</th>
+                    <th>Status</th>
+                    <th>Record Count</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="file : ${processedFiles}">
+                    <td th:text="${file.filename}"></td>
+                    <td th:text="${file.processedAt}"></td>
+                    <td th:class="${file.status}" th:text="${file.status}"></td>
+                    <td th:text="${file.recordCount}"></td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(processedFiles)}">
+                    <td colspan="4" style="text-align: center; color: #666;">No processed files yet</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

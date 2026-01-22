@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Presentation</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #ffffff;
+            color: #333;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .slide {
+            display: none;
+            flex: 1;
+            padding: 10px 20px;
+            flex-direction: column;
+            align-items: center;
+        }
+        .slide.active { display: flex; }
+        .slide p {
+            font-size: 0.9rem;
+            color: #888;
+            margin-bottom: 8px;
+        }
+        .screenshot {
+            max-width: 98%;
+            max-height: 92vh;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            border: 1px solid #ddd;
+        }
+        .text-content {
+            width: 95%;
+            max-height: 85vh;
+            overflow-y: auto;
+            background: #f8f9fa;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            border: 1px solid #ddd;
+            padding: 30px 40px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            text-align: left;
+        }
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+            background: #f5f5f5;
+            border-top: 1px solid #e0e0e0;
+        }
+        .controls button {
+            padding: 12px 32px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            background: #333;
+            color: #fff;
+            font-weight: 600;
+            transition: transform 0.2s, background 0.2s;
+        }
+        .controls button:hover { background: #555; transform: scale(1.05); }
+        .controls button:disabled { background: #ccc; color: #888; cursor: not-allowed; transform: none; }
+        .progress {
+            height: 4px;
+            background: #e0e0e0;
+        }
+        .progress-bar {
+            height: 100%;
+            background: #333;
+            transition: width 0.3s;
+        }
+        .slide-counter {
+            color: #888;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+
+    <div class="slide active" style="justify-content: center;">
+        <h1 style="font-size: 3rem; margin-bottom: 20px;">Let's have an exercise</h1>
+        <p style="font-size: 1.5rem; color: #666;">How long would it take to build this?</p>
+    </div>
+
+    <div class="slide">
+        <p>The Task</p>
+        <div class="text-content" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 1rem; line-height: 1.8;">
+<strong style="font-size: 1.3rem;">File Processor Application</strong>
+
+A Spring Boot application that listens for Kafka messages notifying it of new CSV files, then kicks off Spring Batch jobs to parse and persist the data into PostgreSQL. Files move through input → processed/failed directories based on job outcome.
+
+<strong>Features:</strong>
+• Event-driven architecture with Kafka consumers
+• Chunk-based batch processing with configurable skip/retry policies
+• Idempotency checks to prevent duplicate processing
+• Flyway database migrations
+• Live dashboard with auto-refresh showing job history, record counts, and TPS metrics
+• REST API to manually trigger jobs
+• Full test suite:
+    - Unit tests for processors and services
+    - Testcontainers integration tests with real Kafka & PostgreSQL
+    - Cucumber BDD scenarios for end-to-end flows
+    - Performance tests for throughput benchmarking
+• Local dev environment with Docker Compose (Postgres, Kafka, Zookeeper, Kafka UI, pgAdmin)
+
+<strong>Tech stack:</strong> Java 21, Spring Boot 3.3, Spring Batch, Spring Kafka, PostgreSQL, Thymeleaf, Testcontainers, Cucumber
+
+<hr style="margin: 20px 0; border: none; border-top: 2px solid #ddd;">
+
+<strong style="font-size: 1.2rem;">How long would this take?</strong>
+
+    🧑‍💻  Manually?
+
+    🤖  With GitHub Copilot IntelliJ plugin?
+        </div>
+    </div>
+
+    <div class="slide">
+        <p>Phase 1 Prompt</p>
+        <div class="text-content">Create a Java 21 Spring Boot 3.3.x Maven project.
+
+Group: com.example
+Artifact: file-processor
+Package: com.example.fileprocessor
+
+Add these dependencies: spring-boot-starter-batch, spring-boot-starter-data-jpa, spring-boot-starter-web, spring-kafka, postgresql, flyway-core, lombok, testcontainers
+
+Create docker-compose.yml with:
+- PostgreSQL 16 on port 5432 (db: fileprocessor, user: demo, pass: demo)
+- Kafka on port 9092 with kafka-ui on port 8080
+- pgAdmin on port 5050
+
+Create basic application.yml with datasource and kafka config.
+Server port 8081.</div>
+    </div>
+
+    <div class="slide">
+        <p>Screenshot 1</p>
+        <img src="screenshots/Screenshot 2026-01-22 at 21.01.02.png" alt="Screenshot" class="screenshot">
+    </div>
+
+    <div class="slide">
+        <p>Phase 1 Plan</p>
+        <div class="text-content">Spring Boot Project Scaffolding Plan
+
+Overview
+
+Create Java 21 Spring Boot 3.3.x Maven project with batch processing, Kafka, and PostgreSQL.
+
+Files to Create
+
+1. pom.xml
+- Java 21, Spring Boot 3.3.7
+- Dependencies: spring-boot-starter-batch, spring-boot-starter-data-jpa, spring-boot-starter-web,
+  spring-kafka, postgresql, flyway-core, lombok, testcontainers (junit-jupiter, postgresql, kafka)
+
+2. docker-compose.yml
+- PostgreSQL 16: port 5432, db=fileprocessor, user=demo, pass=demo
+- Kafka (Confluent): port 9092 with Zookeeper
+- kafka-ui: port 8080
+- pgAdmin: port 5050
+
+3. src/main/resources/application.yml
+- Server port: 8081
+- PostgreSQL datasource config
+- Kafka bootstrap-servers: localhost:9092
+- Flyway enabled
+
+4. Project Structure
+src/main/java/com/example/fileprocessor/
+  └── FileProcessorApplication.java
+src/main/resources/
+  ├── application.yml
+  └── db/migration/ (empty, for Flyway)
+src/test/java/com/example/fileprocessor/
+  └── FileProcessorApplicationTests.java
+
+Verification
+
+1. mvn clean compile - verify build succeeds
+2. docker-compose up -d - verify containers start
+3. mvn spring-boot:run - verify app starts on port 8081</div>
+    </div>
+
+    <div class="slide">
+        <p>Screenshot 2</p>
+        <img src="screenshots/Screenshot 2026-01-22 at 21.02.12.png" alt="Screenshot" class="screenshot">
+    </div>
+
+    <div class="slide">
+        <p>Screenshot 3</p>
+        <img src="screenshots/Screenshot 2026-01-22 at 21.02.32.png" alt="Screenshot" class="screenshot">
+    </div>
+
+    <div class="slide">
+        <p>Screenshot 4</p>
+        <img src="screenshots/Screenshot 2026-01-22 at 21.02.39.png" alt="Screenshot" class="screenshot">
+    </div>
+
+    <div class="slide">
+        <p>Screenshot 5</p>
+        <img src="screenshots/Screenshot 2026-01-22 at 21.03.43.png" alt="Screenshot" class="screenshot">
+    </div>
+
+    <div class="slide">
+        <p>Phase 2 Prompt</p>
+        <div class="text-content">Add a Spring Batch job to read CSV files and store data in PostgreSQL.
+
+CSV format (no header): id (long), date (YYYYMMDD), amount (double)
+Example row: 1,20250122,1234.56
+
+Create Flyway migration V1__create_tables.sql with:
+- Table processed_records: id, transaction_date, amount, source_filename, processed_at
+- Table processed_files: id, filename (unique), processed_at, status, record_count
+
+Create JPA entities ProcessedRecord and ProcessedFile with repositories.
+
+Create Spring Batch job config:
+- Job name: fileProcessingJob
+- Reader: FlatFileItemReader for CSV
+- Processor: converts CSV row to ProcessedRecord entity
+- Writer: saves to database
+- Chunk size: 5
+- Add logging listener for job start, chunk progress, and job end
+
+Create FileService with methods:
+- moveToProcessed(filename) - moves file to processed folder
+- moveToFailed(filename) - moves file to failed folder
+
+Invalid rows should be logged and ignored, processing continues.</div>
+    </div>
+
+    <div class="slide">
+        <p>Screenshot 6</p>
+        <img src="screenshots/Screenshot 2026-01-22 at 21.06.10.png" alt="Screenshot" class="screenshot">
+    </div>
+
+    <div class="slide">
+        <p>Phase 2 Plan</p>
+        <div class="text-content">Spring Batch File Processing Job Implementation
+
+Files to Create
+
+1. Flyway Migration - src/main/resources/db/migration/V1__create_tables.sql
+CREATE TABLE processed_files (
+    id BIGSERIAL PRIMARY KEY,
+    filename VARCHAR(255) NOT NULL UNIQUE,
+    processed_at TIMESTAMP NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    record_count INTEGER NOT NULL DEFAULT 0
+);
+
+CREATE TABLE processed_records (
+    id BIGSERIAL PRIMARY KEY,
+    transaction_date DATE NOT NULL,
+    amount DECIMAL(19,2) NOT NULL,
+    source_filename VARCHAR(255) NOT NULL,
+    processed_at TIMESTAMP NOT NULL
+);
+
+2. Entities
+- ProcessedRecord.java - id, transactionDate, amount, sourceFilename, processedAt
+- ProcessedFile.java - id, filename, processedAt, status, recordCount
+
+3. Repositories
+- ProcessedRecordRepository.java
+- ProcessedFileRepository.java
+
+4. Batch Components
+- CsvRecord.java - DTO with id, date (String), amount (Double)
+- BatchConfig.java - Job, Step, Reader, Writer beans
+- CsvRecordProcessor.java - Converts CsvRecord to ProcessedRecord
+- RecordSkipPolicy.java - Logs and skips invalid rows
+- JobLoggingListener.java - Logs job start/end, chunk progress
+
+5. Service
+- FileService.java - moveToProcessed(), moveToFailed()
+
+Key Implementation Details
+- Reader: FlatFileItemReader with job parameter inputFile
+- Processor: Parse YYYYMMDD → LocalDate, amount → BigDecimal
+- Writer: RepositoryItemWriter using ProcessedRecordRepository
+- Chunk size: 5
+
+Verification
+1. mvn clean compile
+2. docker compose up -d
+3. mvn spring-boot:run - Flyway creates tables</div>
+    </div>
+
+    <div class="slide">
+        <p>Screenshot 7</p>
+        <img src="screenshots/Screenshot 2026-01-22 at 21.07.15.png" alt="Screenshot" class="screenshot">
+    </div>
+
+    <div class="slide">
+        <p>Screenshot 8</p>
+        <img src="screenshots/Screenshot 2026-01-22 at 21.07.41.png" alt="Screenshot" class="screenshot">
+    </div>
+
+    <div class="slide">
+        <p>Screenshot 9</p>
+        <img src="screenshots/Screenshot 2026-01-22 at 21.07.55.png" alt="Screenshot" class="screenshot">
+    </div>
+
+    <div class="slide">
+        <p>Screenshot 10</p>
+        <img src="screenshots/Screenshot 2026-01-22 at 21.09.11.png" alt="Screenshot" class="screenshot">
+    </div>
+
+    <div class="slide">
+        <p>Screenshot 11</p>
+        <img src="screenshots/Screenshot 2026-01-22 at 21.10.18.png" alt="Screenshot" class="screenshot">
+    </div>
+
+    <div class="slide">
+        <p>Phase 3 Prompt</p>
+        <div class="text-content">Add Kafka consumer to start the file processing job when a notification arrives.
+
+Topic name: file-notifications
+
+Message format (JSON):
+{
+  "filename": "batch_001.csv",
+  "timestamp": "2025-01-22T10:30:00Z"
+}
+
+Create FileNotification model class with filename and timestamp fields.
+
+Create KafkaConfig with consumer factory for JSON deserialization.
+
+Create FileNotificationConsumer that listens to the topic and calls FileProcessingService.
+
+Create IdempotencyService:
+- isFileProcessed(filename) - checks if file exists in processed_files table
+- markFileAsProcessed(filename, status, recordCount) - saves record
+
+Create FileProcessingService:
+- processFile(notification) method that:
+  1. Checks if file was already processed, if yes log and return
+  2. Verifies file exists at input path
+  3. Launches the Spring Batch job
+  4. Updates processed_files table
+  5. Moves file to processed or failed folder
+
+Add logging throughout: notification received, file already processed, job started, job completed.</div>
+    </div>
+
+    <div class="slide">
+        <p>Screenshot 12</p>
+        <img src="screenshots/Screenshot 2026-01-22 at 21.12.02.png" alt="Screenshot" class="screenshot">
+    </div>
+
+    <div class="slide">
+        <p>Phase 3 Plan</p>
+        <div class="text-content">Kafka Integration for File Processing
+
+Overview
+
+Add Kafka consumer to trigger file processing jobs when notifications arrive on file-notifications topic.
+
+Files to Create
+
+1. Model
+src/main/java/com/example/fileprocessor/kafka/model/FileNotification.java
+- Fields: filename (String), timestamp (String)
+- Use Lombok @Data, @NoArgsConstructor, @AllArgsConstructor
+
+2. Kafka Configuration
+src/main/java/com/example/fileprocessor/kafka/config/KafkaConfig.java
+- ConsumerFactory<String, FileNotification> with JsonDeserializer
+- ConcurrentKafkaListenerContainerFactory bean
+- Configure trusted packages for deserialization
+
+3. Services
+src/main/java/com/example/fileprocessor/service/IdempotencyService.java
+- boolean isFileProcessed(String filename)
+- void markFileAsProcessed(String filename, String status, int recordCount)
+
+src/main/java/com/example/fileprocessor/service/FileProcessingService.java
+- void processFile(FileNotification notification):
+  a. Check idempotency (skip if already processed)
+  b. Build input path from file.input.directory + filename
+  c. Verify file exists
+  d. Launch batch job with JobLauncher
+  e. On success: mark as COMPLETED, move to processed
+  f. On failure: mark as FAILED, move to failed
+
+4. Kafka Consumer
+src/main/java/com/example/fileprocessor/kafka/consumer/FileNotificationConsumer.java
+- @KafkaListener on file-notifications topic
+- Inject FileProcessingService
+- Log notification received, delegate to service
+
+Verification
+1. mvn clean compile
+2. docker compose up -d
+3. mvn spring-boot:run
+4. Send test message to Kafka topic
+5. Check logs for job execution</div>
+    </div>
+
+    <div class="slide">
+        <p>Screenshot 13</p>
+        <img src="screenshots/Screenshot 2026-01-22 at 21.13.18.png" alt="Screenshot" class="screenshot">
+    </div>
+
+    <div class="slide">
+        <p>Screenshot 14</p>
+        <img src="screenshots/Screenshot 2026-01-22 at 21.14.28.png" alt="Screenshot" class="screenshot">
+    </div>
+
+    <div class="slide">
+        <p>Screenshot 15</p>
+        <img src="screenshots/Screenshot 2026-01-22 at 21.15.03.png" alt="Screenshot" class="screenshot">
+    </div>
+
+    <div class="slide">
+        <p>Screenshot 16</p>
+        <img src="screenshots/Screenshot 2026-01-22 at 21.15.25.png" alt="Screenshot" class="screenshot">
+    </div>
+
+    <div class="slide">
+        <p>Phase 4 Prompt</p>
+        <div class="text-content">Add tests and helper scripts.
+
+UNIT TESTS (use JUnit 5 and Mockito):
+
+RecordProcessorTest - test CSV row to entity conversion, test date parsing
+
+IdempotencyServiceTest - test checking new file returns false, existing file returns true
+
+FileServiceTest - test file moving with temp directories
+
+INTEGRATION TEST:
+
+Create FileProcessingIT using Testcontainers for PostgreSQL and Kafka.
+Test: create CSV with 10 rows, send Kafka message, wait for completion, verify 10 records in database.
+
+CUCUMBER TEST:
+
+Create file-processing.feature with one scenario:
+- Given a CSV file exists with 10 records
+- When a file notification is received
+- Then records should be stored in database
+- And file should be moved to processed folder
+
+Create CucumberIT runner and FileProcessingSteps class.
+
+PERFORMANCE TEST:
+
+Create FileProcessingPerformanceIT:
+- Generate 50000 row CSV file
+- Send notification
+- Measure total duration and records per second
+- Log results
+
+SCRIPTS:
+
+Create scripts/generate-test-data.sh:
+- Accepts --rows and --output parameters
+- Generates CSV with random valid data
+
+Create scripts/send-notification.sh:
+- Accepts --filename parameter
+- Sends JSON message to Kafka topic using docker</div>
+    </div>
+
+    <div class="slide">
+        <p>Screenshot 17</p>
+        <img src="screenshots/Screenshot 2026-01-22 at 21.16.14.png" alt="Screenshot" class="screenshot">
+    </div>
+
+    <div class="slide">
+        <p>Phase 4 Plan</p>
+        <div class="text-content">Phase 4: Tests and Scripts
+
+Unit Tests
+
+src/test/java/com/example/fileprocessor/batch/processor/CsvRecordProcessorTest.java
+- Test CSV row conversion to ProcessedRecord entity
+- Test date parsing (yyyyMMdd format)
+- Test filename extraction from path
+
+src/test/java/com/example/fileprocessor/service/IdempotencyServiceTest.java
+- Mock ProcessedFileRepository
+- Test isFileProcessed() returns false for new file
+- Test isFileProcessed() returns true for existing file
+
+src/test/java/com/example/fileprocessor/service/FileServiceTest.java
+- Use @TempDir for test directories
+- Test moveToProcessed() and moveToFailed()
+
+Integration Test
+
+src/test/java/com/example/fileprocessor/integration/FileProcessingIT.java
+- Use Testcontainers (PostgreSQL + Kafka)
+- Test flow: create 10-row CSV → send Kafka message → verify 10 records in DB
+
+Cucumber Test
+
+src/test/resources/features/file-processing.feature
+  Scenario: Process CSV file via Kafka notification
+    Given a CSV file exists with 10 records
+    When a file notification is received
+    Then 10 records should be stored in database
+    And file should be moved to processed folder
+
+src/test/java/com/example/fileprocessor/cucumber/CucumberIT.java
+src/test/java/com/example/fileprocessor/cucumber/FileProcessingSteps.java
+
+Performance Test
+
+src/test/java/com/example/fileprocessor/performance/FileProcessingPerformanceIT.java
+- Generate 50,000 row CSV file
+- Measure total duration, calculate records/second
+
+Scripts
+
+scripts/generate-test-data.sh - Generate CSV with random data
+scripts/send-notification.sh - Send JSON to Kafka topic
+
+Verification
+1. mvn test - all unit tests pass
+2. mvn verify -Pit - integration tests pass</div>
+    </div>
+
+    <div class="slide">
+        <p>Screenshot 18</p>
+        <img src="screenshots/Screenshot 2026-01-22 at 21.19.25.png" alt="Screenshot" class="screenshot">
+    </div>
+
+    <div class="slide">
+        <p>Screenshot 19</p>
+        <img src="screenshots/Screenshot 2026-01-22 at 21.19.56.png" alt="Screenshot" class="screenshot">
+    </div>
+
+    <div class="slide">
+        <p>Screenshot 20</p>
+        <img src="screenshots/Screenshot 2026-01-22 at 21.20.36.png" alt="Screenshot" class="screenshot">
+    </div>
+
+    <div class="slide">
+        <p>Screenshot 21</p>
+        <img src="screenshots/Screenshot 2026-01-22 at 21.21.23.png" alt="Screenshot" class="screenshot">
+    </div>
+
+    <div class="slide">
+        <p>Screenshot 22</p>
+        <img src="screenshots/Screenshot 2026-01-22 at 21.22.40.png" alt="Screenshot" class="screenshot">
+    </div>
+
+    <div class="slide">
+        <p>Phase 5 Prompt</p>
+        <div class="text-content">Add a simple web dashboard and project documentation.
+
+DASHBOARD:
+
+Create DashboardController with GET /dashboard endpoint.
+
+Create dashboard.html Thymeleaf template:
+- Shows recent job runs (job id, start time, end time, status, duration)
+- Shows processed files list (filename, time, status, record count)
+- Auto-refresh every 5 seconds
+- Simple table styling with status colors (green for success, red for failed)
+
+README:
+
+Create README.md with:
+
+1. Project title and short description
+
+2. Architecture diagram using Mermaid showing:
+   Kafka -> Spring Boot App -> PostgreSQL
+   File system interaction for input/processed/failed folders
+
+3. Tech stack list
+
+4. Prerequisites: Java 21, Maven, Docker
+
+5. Quick start steps:
+   - docker-compose up -d
+   - mvn spring-boot:run
+   - ./scripts/generate-test-data.sh --rows 100
+   - ./scripts/send-notification.sh --filename batch_001.csv
+   - Open http://localhost:8081/dashboard
+
+6. How to run tests: mvn test, mvn verify
+
+7. Project folder structure</div>
+    </div>
+
+    <div class="slide">
+        <p>Screenshot 23</p>
+        <img src="screenshots/Screenshot 2026-01-22 at 21.23.44.png" alt="Screenshot" class="screenshot">
+    </div>
+
+    <div class="slide">
+        <p>Phase 5 Plan</p>
+        <div class="text-content">Phase 5: Dashboard and README
+
+Files to Create
+
+1. pom.xml - Add Thymeleaf dependency
+
+2. src/main/java/com/example/fileprocessor/controller/DashboardController.java
+- @Controller (not RestController for Thymeleaf)
+- GET /dashboard returns "dashboard" view
+- Inject JobExplorer for job execution history
+- Inject ProcessedFileRepository for processed files
+- Model attributes:
+  - jobExecutions: List of recent job runs (id, start, end, status, duration)
+  - processedFiles: List ordered by processedAt desc
+
+3. src/main/resources/templates/dashboard.html
+Thymeleaf template with:
+- Auto-refresh meta tag (5 seconds)
+- Job Runs table: Job ID, Start Time, End Time, Status, Duration
+- Processed Files table: Filename, Processed At, Status, Record Count
+- Simple inline CSS with status colors (green=COMPLETED, red=FAILED)
+
+4. README.md
+Contents:
+1. Title and description
+2. Architecture diagram (Mermaid): Kafka → Spring Boot → PostgreSQL
+3. Tech stack list
+4. Prerequisites (Java 21, Maven, Docker)
+5. Quick start steps
+6. Test commands
+7. Folder structure
+
+Verification
+
+1. mvn spring-boot:run (with docker-compose up)
+2. Open http://localhost:8081/dashboard
+3. Process a file and verify dashboard updates
+4. Verify README renders correctly on GitHub</div>
+    </div>
+
+    <div class="slide">
+        <p>Screenshot 24</p>
+        <img src="screenshots/Screenshot 2026-01-22 at 21.25.08.png" alt="Screenshot" class="screenshot">
+    </div>
+
+    <div class="slide">
+        <p>Screenshot 25</p>
+        <img src="screenshots/Screenshot 2026-01-22 at 21.25.59.png" alt="Screenshot" class="screenshot">
+    </div>
+
+    <div class="slide">
+        <p>Screenshot 26</p>
+        <img src="screenshots/Screenshot 2026-01-22 at 21.26.38.png" alt="Screenshot" class="screenshot">
+    </div>
+
+    <div class="slide">
+        <p>Screenshot 27</p>
+        <img src="screenshots/Screenshot 2026-01-22 at 21.27.21.png" alt="Screenshot" class="screenshot">
+    </div>
+
+    <div class="slide">
+        <p>Screenshot 28</p>
+        <img src="screenshots/Screenshot 2026-01-22 at 21.28.26.png" alt="Screenshot" class="screenshot">
+    </div>
+
+    <div class="slide">
+        <p>Screenshot 29</p>
+        <img src="screenshots/Screenshot 2026-01-22 at 21.28.54.png" alt="Screenshot" class="screenshot">
+    </div>
+
+    <div class="slide">
+        <p>Screenshot 30</p>
+        <img src="screenshots/Screenshot 2026-01-22 at 21.31.29.png" alt="Screenshot" class="screenshot">
+    </div>
+
+    <div class="slide">
+        <p>Screenshot 31</p>
+        <img src="screenshots/Screenshot 2026-01-22 at 21.32.22.png" alt="Screenshot" class="screenshot">
+    </div>
+
+    <div class="slide">
+        <p>Screenshot 32</p>
+        <img src="screenshots/Screenshot 2026-01-22 at 21.33.07.png" alt="Screenshot" class="screenshot">
+    </div>
+
+    <div class="slide">
+        <p>Screenshot 33</p>
+        <img src="screenshots/Screenshot 2026-01-22 at 21.36.28.png" alt="Screenshot" class="screenshot">
+    </div>
+
+    <div class="slide">
+        <p>Screenshot 34</p>
+        <img src="screenshots/Screenshot 2026-01-22 at 21.36.51.png" alt="Screenshot" class="screenshot">
+    </div>
+
+    <div class="slide">
+        <p>Screenshot 35</p>
+        <img src="screenshots/Screenshot 2026-01-22 at 21.37.01.png" alt="Screenshot" class="screenshot">
+    </div>
+
+    <div class="slide">
+        <p>Screenshot 36</p>
+        <img src="screenshots/Screenshot 2026-01-22 at 21.38.16.png" alt="Screenshot" class="screenshot">
+    </div>
+
+    <div class="slide">
+        <p>Screenshot 37</p>
+        <img src="screenshots/Screenshot 2026-01-22 at 21.40.47.png" alt="Screenshot" class="screenshot">
+    </div>
+
+    <div class="slide" style="justify-content: center;">
+        <p style="font-size: 1.5rem; margin-bottom: 40px;">Total time from start to finish:</p>
+        <h1 style="font-size: 8rem; color: #28a745; margin: 0;">39:45</h1>
+    </div>
+
+
+
+    <div class="controls">
+        <button id="prevBtn" onclick="changeSlide(-1)">← Previous</button>
+        <span class="slide-counter"><span id="currentSlide">1</span> / <span id="totalSlides">51</span></span>
+        <button id="nextBtn" onclick="changeSlide(1)">Next →</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        document.getElementById('totalSlides').textContent = totalSlides;
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+            document.getElementById('currentSlide').textContent = currentSlide + 1;
+            document.getElementById('progressBar').style.width = ((currentSlide + 1) / totalSlides * 100) + '%';
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+        }
+
+        function changeSlide(direction) {
+            showSlide(currentSlide + direction);
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') changeSlide(1);
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+        });
+
+        showSlide(0);
+    </script>
+</body>
+</html>
