@@ -101,9 +101,12 @@
 A Spring Boot app that listens for Kafka messages about new CSV files, kicks off Spring Batch jobs to parse and persist data into PostgreSQL. Files move through input → processed/failed directories based on outcome.
 
 <strong>Features:</strong>
-• Event-driven architecture with Kafka consumers  • Chunk-based batch processing with skip/retry policies
-• Idempotency checks to prevent duplicates  • Flyway database migrations
-• Live dashboard with job history, record counts, TPS metrics  • REST API to trigger jobs
+• Event-driven architecture with Kafka consumers
+• Chunk-based batch processing with skip/retry policies
+• Idempotency checks to prevent duplicates
+• Flyway database migrations
+• Live dashboard with job history, record counts, TPS metrics
+• REST API to trigger jobs
 • Full test suite: Unit tests, Testcontainers integration tests, Cucumber BDD, Performance tests
 • Local dev environment with Docker Compose (Postgres, Kafka, Zookeeper, Kafka UI, pgAdmin)
 
